@@ -1,8 +1,11 @@
 import requests
 import json
 
-f = open('config.json')
-localhost = json.load(f)['IP']
+with open('config.json', 'r') as f:
+    config_data = json.load(f)
+localhost = config_data['IP']
+username = config_data['username']
+password = config_data['password']
 
 
 def read_data(command):
@@ -12,4 +15,4 @@ def read_data(command):
 
 if __name__ == '__main__':
     print(read_data(
-        f"http://admin:password123456@{localhost}/_all_dbs"))
+        f"http://{username}:{password}@{localhost}/_all_dbs"))
