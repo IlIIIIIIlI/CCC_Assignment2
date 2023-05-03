@@ -3,7 +3,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from getRawData import get_database_name as get_data
-
+from Page1 import page1_data_query
 
 app = FastAPI()
 
@@ -11,8 +11,12 @@ app = FastAPI()
 def get_database():
     return get_data()
 
+@app.get("/page1data")
+def get_page_1_data():
+    return page1_data_query.query_data()
+
 class ServiceNotFound(Exception):
-    def __init__(self, name: str = "未找到服务项目"):
+    def __init__(self, name: str = "No service found"):
         self.name = name
 
 @app.exception_handler(ServiceNotFound)

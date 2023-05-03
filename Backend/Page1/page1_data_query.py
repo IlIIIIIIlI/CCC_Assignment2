@@ -14,23 +14,27 @@ if db in couch:
     db = couch[db]
 
 
-# query data from couchDB
-with open("page1_data.json", "w") as outfile:
+def query_data():
+    data_list = []
     counter = 0
+
     for i in range(len(city_names)):
         city_name = city_names[i]
         view_results = db.view(f"_design/my_design_page1/_view/gcc_{city_name}")
+
         for row in view_results:
             data_out = {}
             row = row.value
+
             if 'sentiment' in list(row.keys()):
                 data_out['sentiment'] = row['sentiment']
                 data_out['loc'] = row['loc']
                 data_out['city'] = row['city']
                 data_out['datetime'] = row['datetime'][:-5]
-                outfile.write(json.dumps(data_out, ensure_ascii=False))
-                outfile.write('\n')
+
+                data_list.append(data_out)
                 counter += 1
 
-print(f'file done! {counter} lines in total.')
+    print(f'Data done! {counter} lines in total.')
+    return data_list
 
