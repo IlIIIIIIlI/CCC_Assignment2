@@ -1,16 +1,58 @@
+import folium
+from folium import plugins
+from folium.plugins import Draw, Fullscreen
+import streamlit as st
+import streamlit_folium as sf
+from streamlit_folium import folium_static
+
+# def testpage1():
+#     st.title('Side-by-Side Map Comparison')
+
+#     # Create a map with two side-by-side layers
+#     def create_side_by_side_map():
+#         m = folium.Map(location=(30, 20), zoom_start=4)
+#
+#         layer_right = folium.TileLayer('openstreetmap', name='OpenStreetMap', control=False)
+#         layer_left = folium.TileLayer('cartodbpositron', name='CartoDB Positron', control=False)
+#
+#         # Instantiate the SideBySideLayers class
+#         sbs = folium.plugins.SideBySideLayers(layer_left=layer_left, layer_right=layer_right)
+#
+#         layer_left.add_to(m)
+#         layer_right.add_to(m)
+#         sbs.add_to(m)
+#
+#         # Add a mouse position control
+#         mouse_position = plugins.MousePosition()
+#         mouse_position.add_to(m)
+#
+#         # Add a draw control with polygon mode to disable map dragging
+#         draw_control = Draw(draw_options={'polygon': {'allowIntersection': False, 'drawError': {'color': '#e1e100', 'message': 'Invalid polygon shape'}}}, edit_options={'polygon': {'allowIntersection': False}})
+#         draw_control.add_to(m)
+#
+#         # Add map dragging functionality to the left control
+#         left_control = plugins.Fullscreen(position='topleft')
+#         left_control.add_to(m)
+#
+#         return m
+#
+#     # Create the side-by-side map and display it using Streamlit
+#     side_by_side_map = create_side_by_side_map()
+#     folium_static(side_by_side_map)
+
+
 # -*- coding: utf-8 -*-
 
 """An example of showing geographic data."""
-
 import os
-
 import altair as alt
 import numpy as np
 import pandas as pd
-import pydeck as pdk
 import streamlit as st
-
-def streamlit_app():
+from streamlit_folium import folium_static
+import folium
+from folium.plugins import MousePosition, Draw, Fullscreen
+def testpage1():
     # LOAD DATA ONCE
     @st.cache_resource
     def load_data():
@@ -37,30 +79,76 @@ def streamlit_app():
 
 
     # FUNCTION FOR AIRPORT MAPS
-    def map(data, lat, lon, zoom):
-        st.write(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/satellite-streets-v12",
-                initial_view_state={
-                    "latitude": lat,
-                    "longitude": lon,
-                    "zoom": zoom,
-                    "pitch": 50,
+    # FUNCTION FOR AIRPORT MAPS
+        def map(data, lat, lon, zoom):
+            m = folium.Map(location=[lat, lon], zoom_start=zoom)
+
+            folium.plugins.Fullscreen(position='topleft').add_to(m)
+            folium.TileLayer('cartodbpositron').add_to(m)
+            folium.TileLayer('openstreetmap').add_to(m)
+
+            folium.plugins.MousePosition(
+                position='bottomleft',
+                separator=' | ',
+                empty_string='NaN',
+                lng_first=True,
+                num_digits=20,
+                prefix='Coordinates:'
+            ).add_to(m)
+
+            folium.plugins.Draw(
+                export=True,
+                filename='draw_data',
+                position='topleft',
+                draw_options={
+                    'polygon': {
+                        'allowIntersection': False,
+                        'drawError': {
+                            'color': '#e1e100',
+                            'message': 'Invalid polygon shape'
+                        }
+                    },
+                    'polyline': False,
+                    'circle': False,
+                    'rectangle': False,
+                    'marker': False,
+                    'circlemarker': False
                 },
-                layers=[
-                    pdk.Layer(
-                        "HexagonLayer",
-                        data=data,
-                        get_position=["lon", "lat"],
-                        radius=100,
-                        elevation_scale=4,
-                        elevation_range=[0, 1000],
-                        pickable=True,
-                        extruded=True,
-                    ),
-                ],
-            )
-        )
+                edit_options={
+                    'poly': {
+                        'allowIntersection': False
+                    }
+                }
+            ).add_to(m)
+
+            folium.plugins.SideBySideLayers(
+                position='topleft',
+                layer_left=folium.FeatureGroup(name='Mapbox Satellite Streets V12').add_to(m),
+                layer_right=folium.FeatureGroup(name='Mapbox Dark').add_to(m)
+            ).add_to(m)
+
+            hexagon_layer = folium.plugins.HeatMap(
+                data=data[['lat', 'lon']].values,
+                name='Hexagon Layer',
+                control=True,
+                show=True,
+                radius=100,
+                min_opacity=0.2,
+                max_zoom=10,
+                blur=50,
+                gradient=None,
+                overlay=True,
+                control_opacity=True,
+                control_radius=True,
+                fill_color='red',
+                line_color='red',
+                popup=None,
+                tooltip=None,
+                weight=1
+            ).add_to(m)
+
+            return m
+
 
 
     # FILTER DATA FOR A SPECIFIC HOUR, CACHE
