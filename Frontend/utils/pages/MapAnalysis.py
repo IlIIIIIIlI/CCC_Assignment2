@@ -55,9 +55,9 @@ def MapAnalysis():
         return filtered_data
 
 
-    # 生成地图
+    # generate map
     def map(data, lat, lon, zoom):
-        print('数据有 {} 行'.format(data.shape[0]))
+        print('data {} rows'.format(data.shape[0]))
         data = data.drop(columns=["city"])
         st.write(
             pdk.Deck(
@@ -334,21 +334,21 @@ def MapAnalysis():
         hist_data = pd.DataFrame({"minute": range(60), "tweets": hist})
         return hist_data
 
-    # 根据所选城市过滤数据
+    # filter data by city
     def filter_data_by_city(grouped_data, city):
         return grouped_data.filter(lambda x: x.name[1] == city)
 
     with row5_2:
-        # 计算柱状图数据
+        # calculate hist data
         chart_data_positive = histdata(filter_data_by_city(sentiment_data, selected_city), hour_selected,
                                        sentiment='positive')
         chart_data_negative = histdata(filter_data_by_city(sentiment_data, selected_city), hour_selected,
                                        sentiment='negative')
 
-        # 显示负向情感柱状图
+        # negative sentiment
         city_name = city_options[selected_city]
 
-        # 显示正向情感柱状图
+        # positive sentiment
         st.write(
             f"""<div style='text-align: center'><b>{city_name}'s {hour_selected}:00 to {(hour_selected + 1) % 24}:00 - 😃 - POSITIVE tweets distribution (minutes)</b></div>""",
             unsafe_allow_html=True,
