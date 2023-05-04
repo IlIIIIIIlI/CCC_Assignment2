@@ -13,7 +13,7 @@ def get_database():
 
 @app.get("/page1data")
 def get_page_1_data():
-    return page1_data_query.query_data1()
+    return page1_data_query.query_data()
 
 class ServiceNotFound(Exception):
     def __init__(self, name: str = "No service found"):
