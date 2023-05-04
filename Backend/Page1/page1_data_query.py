@@ -5,18 +5,10 @@ import couchdb
 import json
 import os
 
-# authentication
-admin = 'admin'
-password = 'password123456'
-url = f'http://{admin}:{password}@172.26.128.204:5984/'
-db = 'gcc_sentiment_data'
 city_names = ['1gsyd', '2gmel', '3gbri', '4gade', '5gper', '6ghob', '7gdar', '8acte']
-couch = couchdb.Server(url)
-if db in couch:
-    db = couch[db]
 
 
-def query_data():
+def query_data(db):
     # Get the current file path
     current_path = os.path.dirname(os.path.abspath(__file__))
     json_file_path = os.path.join(current_path, 'page1_data.json')
@@ -56,3 +48,11 @@ def query_data():
 
         print(f'Data done! {counter} lines in total.')
         return data_list
+
+
+def main():
+    query_data()
+
+
+if __name__ == '__main__':
+    main()
