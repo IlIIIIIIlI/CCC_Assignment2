@@ -5,6 +5,7 @@ import couchdb
 
 from getRawData import get_database_name as get_data
 from Page1 import page1_data_query
+from Page4 import page4_data_query
 
 app = FastAPI()
 
@@ -31,6 +32,10 @@ def get_database():
 def get_page_1_data():
     return page1_data_query.query_data(db)
 
+
+@app.get("/page4data")
+def get_page_4_data():
+    return page4_data_query.query_data_page4(db)
 
 class ServiceNotFound(Exception):
     def __init__(self, name: str = "No service found"):
