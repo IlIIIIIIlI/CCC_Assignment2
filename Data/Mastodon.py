@@ -117,16 +117,20 @@ class Listener(StreamListener):
 
             # Keep only the relevant fields
             processed_status = {
-                'id': status['id'],
-                'created_at': status['created_at'],
-                'content': status['content'],
-                'username': status['account']['username'],
                 'display_name': status['account']['display_name'],
-                'acct': status['account']['acct'],
+                'username': status['account']['username'],
+                'content': status['content'],
+                'followers_count': status['account']['followers_count'],
+                'following_count': status['account']['following_count'],
+                'favourites_count': status['favourites_count'],
+                'reblogs_count': status['reblogs_count'],
+                'replies_count': status['replies_count'],
+                'sensitive': status['sensitive'],
+                'created_at': status['created_at'],
                 'url': status['url'],
                 'sentiment': sentiment_label
             }
-
+            print(processed_status)
             # Save to CouchDB
             json_str = json.dumps(processed_status, indent=2, sort_keys=True, default=str)
             doc_id, doc_rev = db.save(json.loads(json_str))
