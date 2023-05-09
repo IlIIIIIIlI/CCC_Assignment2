@@ -3,39 +3,167 @@ import requests
 import pandas as pd
 import numpy as np
 from streamlit_tags import st_tags  # to add labels on the fly!
+import re
+import nltk
+from wordcloud import WordCloud, STOPWORDS
+# Download stopwords
+from nltk.corpus import stopwords
+from datasets import load_dataset
+import matplotlib.pyplot as plt
+import json
+import plotly.express as px
+import seaborn as sns
+import matplotlib.pyplot as plt
+nltk.download('stopwords')
+stop_words = set(stopwords.words("english"))
+import plotly.graph_objects as go
+import random
 
 def new_page():
-    c1, c2 = st.columns([0.32, 2])
+    import spacy
+    from spacytextblob.spacytextblob import SpacyTextBlob
 
-    # The snowflake logo will be displayed in the first column, on the left.
+    @st.cache(allow_output_mutation=True)
+    def load_nlp_model():
+        nlp = spacy.load('en_core_web_sm')
+        nlp.add_pipe('spacytextblob')
+        return nlp
 
-    with c1:
+    nlp = load_nlp_model()
 
-        st.image("./utils/images/logo.png",width=85)
+    def sentiment(text):
+        doc = nlp(text)
+        if doc._.polarity < 0:
+            return "Negative"
+        elif doc._.polarity == 0:
+            return "Neutral"
+        else:
+            return "Positive"
 
+    def subjectivity(text):
+        doc = nlp(text)
+        if doc._.subjectivity > 0.5:
+            return "Highly Opinionated sentence"
+        elif doc._.subjectivity < 0.5:
+            return "Less Opinionated sentence"
+        else:
+            return "Neutral sentence"
 
-    # The heading will be on the right.
+    # def create_color_map(palette, num_colors, start):
+    #     cmap = plt.get_cmap(palette)
+    #     color_dict = {}
+    #     for i in range(start, start + num_colors):
+    #         color_dict[i] = cmap(i)
+    #     return color_dict
 
-    with c2:
+    def standardize(text):
+        text = re.sub('[^a-zA-Z\d\s]', '', text)
+        text = text.lower()
+        return text
 
-        st.caption("")
-        st.title("Zero-Shot Text Classifier")
+    # Load the data from JSON file
+    with open("utils/data/combined_text.json", "r") as file:
+        data = json.load(file)
 
+    # Access the data in the dictionary
+    income_text = data["income"]["text"]
+    health_text = data["health"]["text"]
+    education_text = data["education"]["text"]
+    social_relationship_text = data["social_relationship"]["text"]
+    culture_and_leisure_text = data["culture_and_leisure"]["text"]
+    sense_of_security_text = data["sense_of_security"]["text"]
+    environmental_protection_text = data["environmental_protection"]["text"]
 
+    def word_cloud(text, title):
+        text = standardize(text)
+        words = text.split()
+        words = ' '.join([word for word in words if word not in stop_words])
+        wc = WordCloud(background_color="black", max_words=200, contour_width=3,
+                       stopwords=STOPWORDS, max_font_size=50)
+        wc.generate(words)
+        fig, ax = plt.subplots(figsize=(15, 15), dpi=500)
+        ax.set_title(title, fontsize=20)
+        ax.imshow(wc.recolor(colormap='magma', random_state=42), cmap=plt.cm.gray, interpolation="bilinear",
+                  alpha=0.98)
+        ax.axis('off')
+        plt.subplots_adjust(top=0.95, bottom=0.05, right=0.95, left=0.05,
+                            hspace=0.2, wspace=0.2)
+        st.pyplot(fig)
+
+    def get_df(input_text):
+        list_words = input_text.split(' ')
+        set_words_full = list(set(list_words))
+        set_words = [i for i in set_words_full if i not in stop_words]
+        count_words = [list_words.count(i) for i in set_words]
+        df = pd.DataFrame(zip(set_words, count_words), columns=['words', 'count'])
+        df.sort_values('count', ascending=False, inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        return df
+
+    def generate_pie_chart(text):
+        text_c = re.sub('[^A-Za-z0-9°]+', ' ', text).lower()
+        df_words = get_df(text_c)
+        print(df_words)
+
+        fig = px.pie(df_words[0:30], values='count', names='words',
+                     color_discrete_sequence=list(sns.color_palette(palette='Reds_r', n_colors=30).as_hex()))
+        fig.update_traces(textposition='auto', textinfo='percent+label', hole=.6, hoverinfo="label+percent+name",
+                          domain=dict(x=[0.1, 0.9], y=[0.1, 0.9]))
+        fig.update_layout(width=600, height=500, margin=dict(t=0, l=0, r=0, b=0))
+        return fig
+
+    # def generate_sunburst_chart(text, contents):
+    #     pr_text = []
+    #     for i in contents:
+    #         idx1 = contents.index(i)
+    #         if (idx1 >= 0) and (idx1 <= len(contents) - 2):
+    #             text_s1 = text.split('\n\n\n== ' + i)[0]
+    #             text_s2 = text_s1.split('\n\n\n== ' + contents[idx1 + 1])[0]
+    #             pr_text.append(text_s2)
+    #         else:
+    #             pass
+    #
+    #     cn_clean_text = [re.sub('[^A-Za-z0-9°]+', ' ', t).lower() for t in pr_text]
+    #     df_cn_words = [list(get_df(i)['words'][0:10]) for i in cn_clean_text]
+    #     df_cn_count = [list(get_df(i)['count'][0:10]) for i in cn_clean_text]
+    #     df_cn_content = [[i.lower()] * len(j) for i, j in zip(contents, df_cn_words)]
+    #
+    #     df_cont = pd.DataFrame(zip(sum(df_cn_content, []), sum(df_cn_words, []), sum(df_cn_count, [])),
+    #                            columns=['contents', 'words', 'count'])
+    #
+    #     df_sum = df_cont.groupby(['contents']).sum().reset_index()
+    #
+    #     pre_words = [i.split(' ')[0] for i in sum(df_cn_content, [])]
+    #     sb_words = [j + '_' + i + ' ' + str(k) for i, j, k in
+    #                 zip(sum(df_cn_words, []), pre_words, sum(df_cn_count, []))] + list(df_sum['contents'])
+    #     sb_count = sum(df_cn_count, []) + list(df_sum['count'])
+    #     sb_contents = sum(df_cn_content, []) + ['Climate change'] * len(list(df_sum['contents']))
+    #
+    #     list_cn_count = sum(df_cn_count, [])
+    #     nc = max(list_cn_count) - min(list_cn_count) + 1
+    #     color_w = create_color_map('Reds', nc, min(list_cn_count))
+    #
+    #     list_sum_count = list(df_sum['count'])
+    #     nw = max(list_sum_count) - min(list_sum_count) + 1
+    #     color_c = create_color_map('Reds', nw, min(list_sum_count))
+    #
+    #     sb_color = [color_w.get(i) for i in sum(df_cn_count, [])] + [color_c.get(i) for i in list(df_sum['count'])]
+    #
+    #     fig = go.Figure(go.Sunburst(labels=sb_words,
+    #                                 parents=sb_contents,
+    #                                 values=sb_count,
+    #                                 marker=dict(colors=sb_color)
+    #                                 ))
+    #     fig.update_layout(width=600, height=500, margin=dict(t=0, l=0, r=0, b=0))  # smaller size
+    #     return fig
+
+    st.title("🎈 Twitter Text Analysis in Seven Happiness Aspects in Australia")
     # We need to set up session state via st.session_state so that app interactions don't reset the app.
-
     if not "valid_inputs_received" in st.session_state:
         st.session_state["valid_inputs_received"] = False
 
-
     ############ SIDEBAR CONTENT ############
-
     st.sidebar.write("")
-
-    # For elements to be displayed in the sidebar, we need to add the sidebar element in the widget.
-
-    # We create a text input field for users to enter their API key.
-
     API_KEY = st.sidebar.text_input(
         "Enter your HuggingFace API key",
         help="Once you created you HuggingFace account, you can get your free API token in your settings page: https://huggingface.co/settings/tokens",
@@ -48,54 +176,94 @@ def new_page():
     # Now, let's create a Python dictionary to store the API headers.
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-
     st.sidebar.markdown("---")
 
-
-    # Let's add some info about the app to the sidebar.
-
     st.sidebar.write(
-        """
-    
+    """
     App created by [Charly Wargnier](https://twitter.com/DataChaz) using [Streamlit](https://streamlit.io/)🎈 and [HuggingFace](https://huggingface.co/inference-api)'s [Distilbart-mnli-12-3](https://huggingface.co/valhalla/distilbart-mnli-12-3) model.
-    
     """
     )
-
 
     ############ TABBED NAVIGATION ############
 
     # First, we're going to create a tabbed navigation for the app via st.tabs()
     # tabInfo displays info about the app.
     # tabMain displays the main app.
+    IncomeTab, EducationTab, HealthTab, SocialRelationshipTab, CultureLTab, SenseTab, EnvironmentTab = st.tabs(["Income", "Education", "Health", "Social Relationship", "Culture and Leisure", "Sense of security", "Environmental protection"])
 
-    MainTab, InfoTab = st.tabs(["Main", "Info"])
-
-    with InfoTab:
-
+    with IncomeTab:
         st.subheader("What is Streamlit?")
         st.markdown(
             "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
         )
+        # Adding the search feature
+        st.markdown("#### Search Keywords")
 
-        st.subheader("Resources")
+        with st.sidebar:
+            keyword = st.text_input("Enter a keyword to search in the text", value="income")
+            submit_button = st.button("Submit")
+
+        # Search using the default keyword ('income') or the user input keyword
+        if keyword:
+            # Assuming that income_text is a list of sentences
+            search_results = [line for line in income_text.split("\n") if keyword.lower() in line.lower()]
+            if len(search_results) > 0:
+                st.markdown(f"#### 20 random lines containing the keyword: {keyword}")
+                if len(search_results) > 20:
+                    random_search_results = random.sample(search_results, 20)
+                else:
+                    random_search_results = search_results
+
+                result_with_sentiment_and_subjectivity = [
+                    {"Text": res, "Sentiment": sentiment(res), "Subjectivity": subjectivity(res)} for res in
+                    random_search_results]
+
+                df = pd.DataFrame(result_with_sentiment_and_subjectivity)
+                st.dataframe(df, width=1200)
+            else:
+                st.error(f"No lines found containing the keyword: {keyword}")
+
+        Income_1, Income_2 = st.columns((1, 1))
+        with Income_1:
+            word_cloud(income_text, "Word Cloud for Income")
+        with Income_2:
+            pie_chart = generate_pie_chart(income_text)
+            st.plotly_chart(pie_chart)
+
+
+    with HealthTab:
+        st.subheader("What is Streamlit?")
+        st.write(income_text)
         st.markdown(
-            """
-        - [Streamlit Documentation](https://docs.streamlit.io/)
-        - [Cheat sheet](https://docs.streamlit.io/library/cheatsheet)
-        - [Book](https://www.amazon.com/dp/180056550X) (Getting Started with Streamlit for Data Science)
-        """
+            "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
         )
 
-        st.subheader("Deploy")
+    with SocialRelationshipTab:
+        st.subheader("What is Streamlit?")
+        st.write(income_text)
         st.markdown(
-            "You can quickly deploy Streamlit apps using [Streamlit Community Cloud](https://streamlit.io/cloud) in just a few clicks."
+            "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
         )
 
-
-    with MainTab:
-
-        # Then, we create a intro text for the app, which we wrap in a st.markdown() widget.
+    with CultureLTab:
+        st.subheader("What is Streamlit?")
+        st.write(income_text)
+        st.markdown(
+            "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
+        )
+    with SenseTab:
+        st.subheader("What is Streamlit?")
+        st.write(income_text)
+        st.markdown(
+            "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
+        )
+    with EnvironmentTab:
+        st.subheader("What is Streamlit?")
+        st.write(income_text)
+        st.markdown(
+            "[Streamlit](https://streamlit.io) is a Python library that allows the creation of interactive, data-driven web applications in Python."
+        )
+    with EducationTab:
 
         st.write("")
         st.markdown(

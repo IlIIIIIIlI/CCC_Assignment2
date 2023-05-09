@@ -7,66 +7,51 @@
 # -----------------------------
 import streamlit as st
 import numpy as np
-from PIL import ImageDraw, Image
-from wordcloud import WordCloud
-import random
-import time
+import pandas as pd
+import re
+import nltk
+from wordcloud import WordCloud, STOPWORDS
+from nltk.corpus import stopwords
+from datasets import load_dataset
+import matplotlib.pyplot as plt
 
 
 def testpage():
-    # Function to generate a wordcloud
-    # Define the data for your wordcloud
-    text = "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10"
+    # Download stopwords
+    nltk.download("stopwords")
+    stop = stopwords.words('english')
 
-    st.title("Dynamic Clickable Wordcloud")
+    def standardize(text):
+        text = re.sub('[^a-zA-Z\d\s]', '', text)
+        text = text.lower()
+        return text
 
-    canvas_size = (800, 600)
-    speed = st.slider("Speed", 1, 20, 10)
+    def word_cloud(content, title):
+        wc = WordCloud(background_color="white", max_words=200, contour_width=3,
+                       stopwords=STOPWORDS, max_font_size=50)
+        wc.generate(" ".join(content.index.values))
+        fig, ax = plt.subplots(figsize=(15, 15), dpi=100)
+        ax.set_title(title, fontsize=20)
+        ax.imshow(wc.recolor(colormap='magma', random_state=42), cmap=plt.cm.gray, interpolation="bilinear",
+                  alpha=0.98)
+        ax.axis('off')
+        st.pyplot(fig)
 
-    wc = WordCloud(background_color="white", width=canvas_size[0], height=canvas_size[1], prefer_horizontal=1)
-    wc.generate(text)
+    def main():
+        st.title("Word Cloud Generator")
 
-    from PIL import ImageDraw, ImageFont
+        # Load your dataset here
+        dataset = load_dataset("merve/poetry", streaming=True)
+        df = pd.DataFrame.from_dict(dataset["train"])
 
-    def create_moving_wordcloud_image():
-        image = Image.new("RGB", canvas_size, "white")
-        draw = ImageDraw.Draw(image)
+        # Clean the text data
+        df.content = df.content.apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+        df.content = df.content.apply(standardize)
 
-        for word, freq in wc.words_.items():
-            position = random.randint(0, canvas_size[0] - 50), random.randint(0, canvas_size[1] - 50)
-            size = random.randint(15, 50)
-            font_path, font_size = wc.font_path, size
-            font = ImageFont.truetype(font_path, font_size)
-            draw.text(position, word, font=font, fill="black")
+        # Generate word clouds
+        content = df.content.str.split(expand=True).unstack().value_counts()
+        word_cloud(content, "Word Cloud")
 
-        return image
+    main()
 
-    def check_click(click_position, image):
-        for word, freq in wc.words_.items():
-            position = random.randint(0, canvas_size[0] - 50), random.randint(0, canvas_size[1] - 50)
-            size = random.randint(15, 50)
-            font = wc.font_path, size
-            draw = ImageDraw.Draw(image)
-            w, h = draw.textsize(word, font=font)
-
-            x, y = position
-            if x < click_position[0] < x + w and y < click_position[1] < y + h:
-                return word
-
-        return None
-
-    words_clicked = []
-
-    while True:
-        image = create_moving_wordcloud_image()
-        image_placeholder = st.empty()
-        click_position = image_placeholder.image(image, use_column_width=True, output_format="PNG", channels="RGB",
-                                                 clamp=True).clicks
-        if click_position:
-            clicked_word = check_click(click_position, image)
-            if clicked_word:
-                words_clicked.append(clicked_word)
-                st.write(f"Clicked word: {clicked_word}")
-
-        time.sleep(1 / speed)
 
