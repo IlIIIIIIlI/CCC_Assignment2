@@ -7,7 +7,8 @@ from utils.pages.home_page import home_page
 # from utils.pages.overview_page import overview_page
 # from utils.pages.pdb_page import pdb_page
 from utils.pages.MapAnalysis import MapAnalysis
-# from utils.pages.new_page import new_page
+from utils.pages.SevenAspects import Seven_Aspects
+from utils.pages.testpage import testpage
 # from utils.pages.search_table import search_table
 # 从提供的文件结构中导入其他页面函数，如需要
 
@@ -33,7 +34,8 @@ app.add_app("Home Page", home_page)
 # app.add_app("Database Overview", overview_page)
 # app.add_app("Search PDB", pdb_page)
 app.add_app("MapAnalysis", MapAnalysis)
-# app.add_app("New Page", new_page) # 添加新页面
+app.add_app("SevenAspects", Seven_Aspects) # 添加新页面
+app.add_app("testpage", testpage)
 # app.add_app("search_table",search_table)
 # 添加其他页面，如需要
 
