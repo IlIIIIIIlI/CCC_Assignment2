@@ -13,6 +13,8 @@ import numpy as np
 from scipy.special import softmax
 import csv
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+
 
 folder_name = 'cardiffnlp'
 
@@ -56,8 +58,6 @@ labels = [row[1] for row in csvreader if len(row) > 1]
 
 model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 model.save_pretrained(MODEL)
-tokenizer.save_pretrained(MODEL)
-
 
 def sentiment_m1(text):
     max_length = 512
@@ -70,6 +70,22 @@ def sentiment_m1(text):
     ranking = ranking[::-1]
     return labels[ranking[0]]
 
+def stream_from_server(base_url, access_token):
+    try:
+        m = Mastodon(
+            api_base_url=base_url,
+            access_token=access_token
+        )
+
+        while True:
+            try:
+                m.stream_public(Listener())
+            except Exception as e:
+                print(f'Error in stream_public: {e}. Restarting...')
+    except Exception as e:
+        print(f'Error connecting to server {base_url}: {e}')
+
+
 # authentication
 url = 'http://admin:password123456@172.26.128.137:5984'
 
@@ -77,7 +93,7 @@ url = 'http://admin:password123456@172.26.128.137:5984'
 couch = couchdb.Server(url)
 
 # indicate the db name
-db_name = 'mastodon'
+db_name = 'mastodon2'
 
 # if not exist, create one
 if db_name not in couch:
@@ -85,13 +101,7 @@ if db_name not in couch:
 else:
     db = couch[db_name]
 
-# optional, better not hardcode here
-token = 'TX-NSFcrDctyrwZWgp6FCCMBOdGniiVRmX87FSVf2t8'
-m = Mastodon(
-    # your server here
-    api_base_url=f'https://mastodon.social/',
-    access_token=token
-)
+
 
 # listen on the timeline
 class Listener(StreamListener):
@@ -124,10 +134,18 @@ class Listener(StreamListener):
         except Exception as e:
             print(f'Error uploading document to CouchDB: {e}')
 
-
-# make it better with try-catch and error-handling
-while True:
-    try:
-        m.stream_public(Listener())
-    except Exception as e:
-        print(f'Error in stream_public: {e}. Restarting...')
+servers = [
+    {
+        'base_url': 'https://mastodon.au/',
+        'access_token': 'zMfyrrco_Ma8zb5hkphxkqqLLWG9lNMSnix6mdw68vo'
+    },
+    {
+        'base_url': 'https://aus.social/',
+        'access_token': '5sHBCOygBtBjsdAcMmzMbGSPEWEQSDnj17NLHT7tNYA'
+    }
+]
+try:
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(stream_from_server, server['base_url'], server['access_token']) for server in servers]
+except Exception as e:
+    print(f'Error running threads: {e}')
