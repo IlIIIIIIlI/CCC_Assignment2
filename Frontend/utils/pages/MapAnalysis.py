@@ -137,13 +137,11 @@ def MapAnalysis():
         st.title("🐨📈 Aussie Tweets & Happiness: Mapping the Emotional Landscape of Australia")
 
     with row1_2:
-        st.write(
-            """
+        st.subheader(
+        """
         ##
         On this page, we take a deep dive into the emotional landscape of Australia by analyzing tweets from different regions and performing sentiment analysis. 
         By examining the language used in tweets related to happiness and well-being, we aim to map out how different areas of Australia fare in terms of overall happiness. 
-        Our interactive dashboard allows users to explore these findings in real-time, with the ability to filter by region and time period. 
-        With this data, we hope to gain a better understanding of what contributes to the overall happiness of Australians and shed light on potential areas for improvement.
         """
         )
 
