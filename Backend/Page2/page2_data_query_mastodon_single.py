@@ -35,11 +35,11 @@ def query_data(db):
     Aname="i['key']"
     num_M=0
     counter = 0
-    rank=10
+    rank=1
     for i in top_10_items:
         print(i)
         rank_name = rank
-        rank-=1
+        rank+=1
         Aname=i['key']
         print(Aname)
         num_M=i['value']
