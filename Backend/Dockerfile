@@ -10,6 +10,6 @@ RUN pip install -r requirements.txt
 
 COPY . /Backend
 
-# EXPOSE 8080
+EXPOSE 8000
 
 CMD ["Backend", "run", "main.py"]
