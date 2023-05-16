@@ -1,15 +1,15 @@
 FROM python:3.8-slim
 
-RUN mkdir /Backend
+RUN mkdir /backend
 
-COPY environment.txt /Backend
+COPY environment.txt /backend
 
-WORKDIR /Backend
+WORKDIR /backend
 
 RUN pip install -r environment.txt
 
-COPY . /Backend
+COPY . /backend
 
 EXPOSE 8000
 
-CMD ["Backend", "run", "main.py"]
+CMD ["backend", "run", "main.py"]
