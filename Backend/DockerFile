@@ -1,0 +1,15 @@
+FROM python:3.8-slim
+
+RUN mkdir /Backend
+
+COPY environment.txt /Backend
+
+WORKDIR /Backend
+
+RUN pip install -r requirements.txt
+
+COPY . /Backend
+
+# EXPOSE 8080
+
+CMD ["Backend", "run", "main.py"]
