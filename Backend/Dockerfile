@@ -12,4 +12,6 @@ COPY . /backend
 
 EXPOSE 8000
 
-CMD ["backend", "run", "main.py"]
+# CMD ["backend", "run", "main.py"]
+
+CMD ["python", "main.py"]
