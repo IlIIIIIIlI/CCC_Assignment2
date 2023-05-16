@@ -6,7 +6,7 @@ COPY environment.txt /Backend
 
 WORKDIR /Backend
 
-RUN pip install -r requirements.txt
+RUN pip install -r environment.txt
 
 COPY . /Backend
 
