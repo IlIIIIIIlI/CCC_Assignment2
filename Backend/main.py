@@ -19,12 +19,14 @@ def login_to_db():
     couch = couchdb.Server(url)
     if db in couch:
         db = couch[db]
+        print("Connected to database")
     return db
 
 db = login_to_db()
 
 @app.get("/showdatabase")
 def get_database():
+    print("got here!")
     return get_data()
 
 
@@ -49,7 +51,7 @@ async def service_not_found_handler(request: Request, exc: ServiceNotFound):
 
 def run():
     import uvicorn
-    uvicorn.run('main:app', host='0.0.0.0', port=8000)
+    uvicorn.run('main:app', host='172.26.129.111', port=8000)
 
 
 if __name__ == '__main__':
