@@ -51,7 +51,7 @@ async def service_not_found_handler(request: Request, exc: ServiceNotFound):
 
 def run():
     import uvicorn
-    uvicorn.run('main:app', host='172.26.129.111', port=8000)
+    uvicorn.run('main:app', host='0.0.0.0', port=8000)
 
 
 if __name__ == '__main__':
