@@ -26,7 +26,6 @@ db = login_to_db()
 
 @app.get("/showdatabase")
 def get_database():
-    print("got here!")
     return get_data()
 
 
