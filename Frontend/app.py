@@ -4,9 +4,9 @@ st.set_page_config(layout="wide", page_title="Aussie Happiness Tweets", page_ico
 
 # 导入页面函数
 from utils.pages.home_page import home_page
-# from utils.pages.overview_page import overview_page
-# from utils.pages.pdb_page import pdb_page
-from utils.pages.MapAnalysis import MapAnalysis
+from utils.pages.BloggerAnalysis import Blogger_Analysis
+from utils.pages.pdb_page import pdb_page
+from utils.pages.MapAnalysis import Map_Analysis
 from utils.pages.SevenAspects import Seven_Aspects
 from utils.pages.testpage import testpage
 # from utils.pages.search_table import search_table
@@ -31,10 +31,10 @@ app = MultiApp()
 
 # 将页面添加到应用程序中
 app.add_app("Home Page", home_page)
-# app.add_app("Database Overview", overview_page)
-# app.add_app("Search PDB", pdb_page)
-app.add_app("MapAnalysis", MapAnalysis)
+app.add_app("Blogger Analysis", Blogger_Analysis)
 app.add_app("SevenAspects", Seven_Aspects) # 添加新页面
+app.add_app("MapAnalysis", Map_Analysis)
+app.add_app("Search PDB", pdb_page)
 app.add_app("testpage", testpage)
 # app.add_app("search_table",search_table)
 # 添加其他页面，如需要

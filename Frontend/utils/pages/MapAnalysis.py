@@ -15,7 +15,7 @@ import streamlit_folium as sf
 from streamlit_folium import folium_static
 
 
-def MapAnalysis():
+def Map_Analysis():
     import numpy as np
     from collections import Counter
     def find_outliers(data):
