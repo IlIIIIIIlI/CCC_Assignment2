@@ -29,14 +29,16 @@ token3 = ["rent", "apartment", "house", "property", "lease", "tenant", "landlord
 # query data from couchDB
 topics = ['marriage', 'income', 'rent']
 tokens = [token, token2, token3]
-for topic in range(3):
-    data = []
-    for i in range(len(city_names)):
-        city_name = city_names[i]
-        view_results = db.view(f"_design/my_design_page1/_view/gcc_{city_name}")
-        data_out = {'city': city_name, 'count': 0}
+
+data = []
+for i in range(len(city_names)):
+    city_name = city_names[i]
+    view_results = db.view(f"_design/my_design_page1/_view/gcc_{city_name}")
+    data_out = {'city': city_name}
+    for topic in range(3):
         counter = 0
         positive = 0
+        data_out[f'{topics[topic]}_count'] = 0
         for row in view_results:
             row = row.value
             if 'text' in list(row.keys()) and 'sentiment' in list(row.keys()):
@@ -44,21 +46,22 @@ for topic in range(3):
                 # print(text)
                 for t in tokens[topic]:
                     if t in text:
-                        data_out['count'] += 1
+                        data_out[f'{topics[topic]}_count'] += 1
                         counter += 1
                         if row['sentiment'] == 'positive':
                             positive += 1
-        data_out['positive_rate'] = positive/counter
-        data.append(data_out)
-    csv_file = f"page3-{topics[topic]}.csv"
+        data_out[f'{topics[topic]}_positive_rate'] = positive/counter
+    data.append(data_out)
+csv_file = f"page3-data.csv"
 
-    # 定义CSV字段
-    fields = ["city", "count", "positive_rate"]
+# 定义CSV字段
+fields = ["city", "marriage_count", "marriage_positive_rate", "income_count", "income_positive_rate",
+          "rent_count", "rent_positive_rate"]
 
-    # 将数据写入CSV文件
-    with open(csv_file, mode="w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=fields)
-        writer.writeheader()
-        writer.writerows(data)
-    print(f'{csv_file} finished!')
+# 将数据写入CSV文件
+with open(csv_file, mode="w", newline="") as file:
+    writer = csv.DictWriter(file, fieldnames=fields)
+    writer.writeheader()
+    writer.writerows(data)
+print(f'{csv_file} finished!')
 
