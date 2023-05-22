@@ -1,5 +1,5 @@
 ---
-- name: install python with Mastodon and CouchDB
+- name: install python with Mastodon,CouchDB and Transformers
   hosts: localhost
   become: yes
   tasks:
@@ -17,6 +17,11 @@
       pip:
         name: "Mastodon.py, couchdb"
         state: latest
+
+    - name: install Transformers
+        pip:
+          name: transformers
+          state: latest
 
     - name: run Python application
       ansible.builtin.command:
