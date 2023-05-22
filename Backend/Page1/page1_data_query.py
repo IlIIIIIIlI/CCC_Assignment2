@@ -50,9 +50,10 @@ def query_data(db):
         return data_list
 
 
-# def main():
-#     query_data()
-#
-#
-# if __name__ == '__main__':
-#     main()
+def main():
+    query_data()
+
+
+if __name__ == '__main__':
+    main()
+
