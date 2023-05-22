@@ -12,7 +12,7 @@ Part one： \url
 
 Part two:  \url
 
-![alt text](https://github.com/szzuo/CCC_Assignment2/tree/main/img/about_us.png)
+![alt text](./img/about_us.png)
 
 
 ## Architecture
