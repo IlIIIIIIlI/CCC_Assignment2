@@ -1,5 +1,5 @@
 ---
-- name: install python with Mastodon,CouchDB and Transformers
+- name: install
   hosts: localhost
   become: yes
   tasks:
@@ -21,6 +21,16 @@
     - name: install Transformers
       pip:
         name: transformers
+        state: latest
+
+    - name: install Scipy
+      pip:
+        name: scipy
+        state: latest
+
+    - name: install PyTorch
+      pip:
+        name: torch
         state: latest
 
     - name: run Python application
