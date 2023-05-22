@@ -34,5 +34,5 @@
         state: latest
 
     - name: run Python application
-      ansible.builtin.command:
-        cmd: "python3 Mastodon.py"
+      ansible.builtin.shell:
+        cmd: "nohup python3 Mastodon.py > /dev/null 2>&1 &"

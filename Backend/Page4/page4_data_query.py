@@ -25,25 +25,25 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 json_file_path = os.path.join(current_path, 'page4_data.json')
 
 
-def get_combined_text_list_for_topic(db, topic):
-    combined_text_list = []
+def get_combined_text_for_topic(db, topic):
+    combined_text = ""
     topic_related_docs = db.view(f'topic_related_docs/by_{topic}_token')
 
     for row in topic_related_docs:
         text = row.value
-        combined_text_list.append(text)
+        combined_text += text
 
-    return combined_text_list
+    return combined_text
 
 
 def save_combined_text_list_to_json(db):
-    combined_text_dict = {}
+    text_dict = {topic: {} for topic in topics.keys()}
     for topic in topics.keys():
-        combined_text_list = get_combined_text_list_for_topic(db, topic)
-        combined_text_dict[topic] = combined_text_list
+        combined_text = get_combined_text_for_topic(db, topic)
+        text_dict[topic]["text"] = combined_text
 
     with open(json_file_path, "w") as file:
-        json.dump(combined_text_dict, file)
+        json.dump(text_dict, file)
 
 
 def load_combined_text_list_from_json():
