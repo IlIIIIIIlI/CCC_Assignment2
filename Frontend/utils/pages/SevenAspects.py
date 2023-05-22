@@ -58,6 +58,16 @@ def Seven_Aspects():
     with open("utils/data/combined_text.json", "r") as file:
         data = json.load(file)
 
+    # # Load IP address
+    # with open('config.json') as f:
+    #     localhost = json.load(f)['IP']
+    #
+    # # Fetch data from server
+    # r = requests.get(f'http://{localhost}:8000/page4data', timeout=200)
+    # # parse json
+    # data = r.json()
+
+
     # Count the number of records in each category
     category_counts = {category: len(records["text"].split()) for category, records in data.items()}
     # Access the data in the dictionary

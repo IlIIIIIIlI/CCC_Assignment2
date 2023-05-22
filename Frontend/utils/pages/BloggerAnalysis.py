@@ -9,7 +9,7 @@ import json
 from stqdm import stqdm
 import openai
 
-openai.api_key = "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"
+# openai.api_key = "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"
 def get_blogger_analysis(blogger, recent_posts):
     prompt = f"Blogger: {blogger}\n\n"
     prompt += f"Recent Posts: {recent_posts}\n\n"
