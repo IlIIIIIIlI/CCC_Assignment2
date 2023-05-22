@@ -19,9 +19,9 @@
         state: latest
 
     - name: install Transformers
-        pip:
-          name: transformers
-          state: latest
+      pip:
+        name: transformers
+        state: latest
 
     - name: run Python application
       ansible.builtin.command:
