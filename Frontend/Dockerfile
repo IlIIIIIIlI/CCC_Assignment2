@@ -6,6 +6,8 @@ COPY requirements.txt /frontend
 
 WORKDIR /frontend
 
+RUN apt-get update && apt-get install -y sudo
+
 RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
@@ -13,7 +15,5 @@ RUN pip install -r requirements.txt
 COPY . /frontend
 
 EXPOSE 8501
-
-CMD ["dbus-uuidgen", "--ensure"]  # Ensuring dbus-uuidgen is executed
 
 CMD ["streamlit", "run", "app.py"]
