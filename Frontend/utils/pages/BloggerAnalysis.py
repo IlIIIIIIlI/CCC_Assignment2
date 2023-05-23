@@ -8,8 +8,8 @@ import random
 import json
 from stqdm import stqdm
 import openai
-
-# openai.api_key = "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"
+import requests
+openai.api_key = "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"
 def get_blogger_analysis(blogger, recent_posts):
     prompt = f"Blogger: {blogger}\n\n"
     prompt += f"Recent Posts: {recent_posts}\n\n"
@@ -48,10 +48,25 @@ def Blogger_Analysis():
     col1.markdown("## 🐦 Twitter Happiness Index Australia Blogger 🇦🇺")
     col2.markdown("## 🐘 Mastodon Happiness Index Australia Blogger 🇦🇺")
 
-    with open('./utils/data/page2_data_T.json', encoding='utf-8') as f:
-        twitter_data = json.load(f)
-    with open('./utils/data/page2_data_M.json', encoding='utf-8') as f:
-        mastodon_data = json.load(f)
+    # with open('./utils/data/page2_data_T.json', encoding='utf-8') as f:
+    #     twitter_data = json.load(f)
+    # with open('./utils/data/page2_data_M.json', encoding='utf-8') as f:
+    #     mastodon_data = json.load(f)
+
+    # Load IP address ------------------------------------------
+    with open('config.json') as f:
+        localhost = json.load(f)['IP']
+
+    # Fetch data from server
+    r = requests.get(f'http://{localhost}:8000/page2data_tweet', timeout=200)
+    # parse json
+    twitter_data = r.json()
+
+    # Fetch data from server
+    r = requests.get(f'http://{localhost}:8000/page2data_mastodon', timeout=200)
+    # parse json
+    mastodon_data = r.json()
+    # ----------------------------------------------------------------
 
     twitter_df = pd.DataFrame(twitter_data)
 

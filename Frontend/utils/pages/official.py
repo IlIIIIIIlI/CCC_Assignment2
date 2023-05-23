@@ -3,13 +3,13 @@ import numpy as np
 import altair as alt
 import pandas as pd
 import streamlit as st
-
+import requests
 import random
 import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
-
+import json
 @st.cache_data
 def load_data():
     df = pd.read_csv('./utils/data/marital.csv', na_values=[' ', 'NA', 'na', 'N/A', 'n/a'])
@@ -17,7 +17,18 @@ def load_data():
     # Groupby lga_code_2021 and sum
     df = df.groupby('lga_code_2021').sum().reset_index()
     # twitter marriage
-    df_t = pd.read_csv('./utils/data/page3-data.csv')
+    # df_t = pd.read_csv('./utils/data/page3-data.csv')
+    #----------------------------------------------------------------
+    with open('config.json') as f:
+        localhost = json.load(f)['IP']
+
+    # Fetch data from server
+    r = requests.get(f'http://{localhost}:8000/page3data', timeout=200)
+    # parse json
+    df_t = r.json()
+    df_t = pd.json_normalize(df_t)
+    # ----------------------------------------------------------------
+
     df_income = pd.read_csv('./utils/data/income.csv')
     df_income2 = df_income.copy()
     df_mortgage = pd.read_csv('./utils/data/mortgage.csv')

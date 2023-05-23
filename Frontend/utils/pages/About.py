@@ -15,8 +15,6 @@ from nltk.corpus import stopwords
 from datasets import load_dataset
 import matplotlib.pyplot as plt
 
-import streamlit as st
-
 
 def About():
     st.title('About us')
