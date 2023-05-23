@@ -16,7 +16,7 @@ Part two:  \url
 
 
 ## Architecture
-![alt text](https://github.com/szzuo/CCC_Assignment2/tree/main/img/about_us.png)
+![alt text](./img/deploy.png)
 
 ## Deployment user guide
 
