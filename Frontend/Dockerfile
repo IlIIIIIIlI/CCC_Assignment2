@@ -14,4 +14,6 @@ COPY . /frontend
 
 EXPOSE 8501
 
+CMD ["dbus-uuidgen", "--ensure"]  # Ensuring dbus-uuidgen is executed
+
 CMD ["streamlit", "run", "app.py"]
