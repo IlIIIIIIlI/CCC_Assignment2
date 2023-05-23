@@ -14,4 +14,4 @@ COPY . /frontend
 
 EXPOSE 8501
 
-CMD ["python", "app.py"]
+CMD ["streamlit", "run", "app.py"]
