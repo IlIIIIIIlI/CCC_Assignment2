@@ -16,7 +16,7 @@ Part two:  \url
 
 
 ## Architecture
-![alt text](./img/deploy.png)
+![alt text](./img/1.png)
 
 ## Deployment user guide
 
