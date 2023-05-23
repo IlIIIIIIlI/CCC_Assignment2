@@ -9,6 +9,7 @@ from Page4 import page4_data_query
 from Page2 import page2_data_query_mastodon_single
 from Page2 import tweet
 from Page3 import page3
+from Homepage import home_page_data
 
 app = FastAPI()
 
@@ -40,9 +41,15 @@ def login_to_mastodonDB():
 db = login_to_db()
 db_mastodon = login_to_mastodonDB()
 
+
 @app.get("/showdatabase")
 def get_database():
     return get_data()
+
+
+@app.get("/homepage")
+def get_homepage_data():
+    return home_page_data.query_data(db_mastodon)
 
 
 @app.get("/page1data")
