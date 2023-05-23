@@ -6,7 +6,7 @@ import couchdb
 from getRawData import get_database_name as get_data
 from Page1 import page1_data_query
 from Page4 import page4_data_query
-from Page2 import page2_data_query_mastodon_single
+from Page2 import M4API
 from Page2 import tweet
 from Page3 import page3
 from Homepage import home_page_data
@@ -59,7 +59,7 @@ def get_page_1_data():
 
 @app.get("/page2data_mastodon")
 def get_page_2_data_M():
-    return page2_data_query_mastodon_single.query_data(db_mastodon)
+    return M4API.query_data()
 
 
 @app.get("/page2data_tweet")
