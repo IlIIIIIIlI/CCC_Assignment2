@@ -68,6 +68,12 @@ def Blogger_Analysis():
     mastodon_data = r.json()
     # ----------------------------------------------------------------
 
+    # Convert all columns to numeric types
+    for col in twitter_df.columns:
+        twitter_df[col] = pd.to_numeric(twitter_df[col], errors='ignore', downcast='integer')
+    for col in mastodon_df.columns:
+        mastodon_df[col] = pd.to_numeric(mastodon_df[col], errors='ignore', downcast='integer')
+
     twitter_df = pd.DataFrame(twitter_data)
 
     # Convert columns related to numbers into integer type.
