@@ -76,17 +76,18 @@ def Blogger_Analysis():
     twitter_df['like_count'] = twitter_df['like_count'].astype(int)
     twitter_df['quote_count'] = twitter_df['quote_count'].astype(int)
 
-    mastodon_df = pd.DataFrame(mastodon_data)
-    
-    def try_convert_to_int(col):
+    def try_convert(value):
         try:
-            return col.astype(int)
+            return int(value)
         except ValueError:
-            return col
+            try:
+                return float(value)
+            except ValueError:
+                return value
 
-    twitter_df = twitter_df.apply(try_convert_to_int)
-    mastodon_df = mastodon_df.apply(try_convert_to_int)
-
+    mastodon_df = pd.DataFrame(mastodon_data)
+    mastodon_df = mastodon_df.applymap(try_convert)
+    twitter_df = twitter_df.applymap(try_convert)
 
     # Combine date and time columns into datetime
     twitter_df['datetime'] = pd.to_datetime(twitter_df['date'] + ' ' + twitter_df['time'])
