@@ -12,8 +12,8 @@ protobuf<3.20.0
 requests==2.26.0
 scipy==1.7.1
 seaborn==0.11.2
-streamlit==0.88.0
-streamlit-folium==0.3.0
-streamlit-tags==1.2.1
+streamlit
+streamlit-folium
+streamlit-tags
 stqdm
 wordcloud==1.8.1
