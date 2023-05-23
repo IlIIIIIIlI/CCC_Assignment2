@@ -68,12 +68,6 @@ def Blogger_Analysis():
     mastodon_data = r.json()
     # ----------------------------------------------------------------
 
-    # Convert all columns to numeric types
-    for col in twitter_df.columns:
-        twitter_df[col] = pd.to_numeric(twitter_df[col], errors='ignore', downcast='integer')
-    for col in mastodon_df.columns:
-        mastodon_df[col] = pd.to_numeric(mastodon_df[col], errors='ignore', downcast='integer')
-
     twitter_df = pd.DataFrame(twitter_data)
 
     # Convert columns related to numbers into integer type.
@@ -83,6 +77,15 @@ def Blogger_Analysis():
     twitter_df['quote_count'] = twitter_df['quote_count'].astype(int)
 
     mastodon_df = pd.DataFrame(mastodon_data)
+    
+    def try_convert_to_int(col):
+        try:
+            return col.astype(int)
+        except ValueError:
+            return col
+
+    twitter_df = twitter_df.apply(try_convert_to_int)
+    mastodon_df = mastodon_df.apply(try_convert_to_int)
 
 
     # Combine date and time columns into datetime
