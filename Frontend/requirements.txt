@@ -1,4 +1,4 @@
-altair==4.1.0
+altair
 datasets==1.11.0
 folium==0.12.1
 matplotlib==3.4.3
@@ -17,3 +17,4 @@ streamlit-folium
 streamlit-tags
 stqdm
 wordcloud==1.8.1
+spacy
