@@ -1,6 +1,6 @@
 altair
 datasets==1.11.0
-folium==0.12.1
+folium
 matplotlib==3.4.3
 nltk==3.6.2
 numpy==1.21.2
