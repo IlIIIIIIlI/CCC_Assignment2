@@ -18,3 +18,5 @@ streamlit-tags
 stqdm
 wordcloud==1.8.1
 spacy
+textblob
+spacytextblob
