@@ -10,7 +10,7 @@ Group33 Assignment2
 ## Video
 Part one： \url
 
-Part two:  \url
+Part two:  [\url](https://youtu.be/YiurOBuxWWw)
 
 ![alt text](./img/about_us.png)
 
