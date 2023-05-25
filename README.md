@@ -10,7 +10,7 @@ Group33 Assignment2
 ## Video
 Part one： \url
 
-Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YiurOBuxWWw/0.jpg)](https://youtu.be/YiurOBuxWWw)
+Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)](https://youtu.be/Cp7H8vrW6WE)
 
 ![alt text](./img/about_us.png)
 
