@@ -12,6 +12,8 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
+RUN python -m spacy download en_core_web_sm
+
 COPY . /frontend
 
 EXPOSE 8501
