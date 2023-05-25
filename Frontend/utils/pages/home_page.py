@@ -100,7 +100,7 @@ def home_page():
 
     st.sidebar.image("https://photosavercn.oss-cn-guangzhou.aliyuncs.com/img/202305231320347.jpg")
     st.sidebar.caption("Cluster and Cloud Computing (COMP90024_2023_SM1)")
-    st.sidebar.caption("Group33")
+    st.sidebar.markdown("<h2 style='text-align: center; color: #2a9d8f;'>Group 33</h2>", unsafe_allow_html=True)
     st.sidebar.markdown("## Database-Related Links")
     for link_text, link_url in PROJECT_RESOURCES_LINKS.items():
         create_st_button(link_text, link_url, st_col=st.sidebar)
