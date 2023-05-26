@@ -14,9 +14,14 @@ The front-end of this project utilizes Streamlit, an open-source application fra
 
 
 ## Video
-Part one：[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/KZouVVgGIgA/0.jpg)](https://youtu.be/KZouVVgGIgA)
+Part one：
 
-Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)](https://youtu.be/TrJ6uQKA-rM)
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/KZouVVgGIgA/0.jpg)](https://youtu.be/KZouVVgGIgA)
+
+Part two:  
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)](https://youtu.be/TrJ6uQKA-rM)
+
+##team
 
 ![alt text](./img/about_us.png)
 
