@@ -39,6 +39,9 @@ To execute the Ansible script, navigate to the directory containing the script a
 
 ```bash
 ansible-playbook Ansible.yaml
+#### 4. Backend
+```bash
+pip3 install -r environment.txt
 
-
+python3 main.py
 
