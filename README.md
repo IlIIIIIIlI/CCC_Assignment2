@@ -16,7 +16,7 @@ Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)]
 
 
 ## Architecture
-![alt text](./img/1.png)
+![alt text](./img/logo.png)
 
 ## Deployment user guide
 
