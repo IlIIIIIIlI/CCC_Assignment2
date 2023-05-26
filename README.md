@@ -1,6 +1,10 @@
 # CCC_Assignment2
 Group33 Assignment2
 
+This project requires our team to develop a front-end web application based on the cloud system
+(UniMelb Research Cloud) to tell and visualize interesting life stories in Australia and improve our
+understanding of Australian life.
+
 ## Frontend website
 
 (http://172.26.129.111:8501/)
@@ -12,7 +16,7 @@ The front-end of this project utilizes Streamlit, an open-source application fra
 ## Video
 Part one： \url
 
-Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)](https://youtu.be/Cp7H8vrW6WE)
+Part two:  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/Cp7H8vrW6WE/0.jpg)](https://youtu.be/TrJ6uQKA-rM)
 
 ![alt text](./img/about_us.png)
 
@@ -37,11 +41,19 @@ This repository includes an Ansible script (`Ansible.yaml` in the `Data` folder)
 
 To execute the Ansible script, navigate to the directory containing the script and run the following command in the terminal:
 
-```bash
-ansible-playbook Ansible.yaml
-#### 4. Backend
-```bash
-pip3 install -r environment.txt
+```
+$ ansible-playbook Ansible.yaml
+```
+#### Backend
+```
+$ pip3 install -r environment.txt
 
-python3 main.py
+$ python3 main.py
+```
 
+#### Frontend
+```
+$ pip3 install -r requirement.txt
+
+$ python3 app.py
+```
