@@ -3,9 +3,9 @@ Group33 Assignment2
 
 ## Frontend website
 
-[\url](http://172.26.129.111:8501/)
+(http://172.26.129.111:8501/)
 
-The front-end of this project utilizes Streamlit, an open-source application framework, for constructing interactive, data-driven applications with Python scripts and supports complex objects and models. Streamlit is characterized by its real-time interactivity, expedited development process, and it simplifies the deployment of data-driven web applications. In this project, we optimized the efficiency of data requests from the backend by using Streamlit's internal plugins, thus improving user experience.![image](https://github.com/szzuo/CCC_Assignment2/assets/77279346/ef9408fe-9592-4dc4-a697-48746e56a222)
+The front-end of this project utilizes Streamlit, an open-source application framework, for constructing interactive, data-driven applications with Python scripts and supports complex objects and models. Streamlit is characterized by its real-time interactivity, expedited development process, and it simplifies the deployment of data-driven web applications. In this project, we optimized the efficiency of data requests from the backend by using Streamlit's internal plugins, thus improving user experience.
 
 
 
