@@ -1,5 +1,4 @@
-# CCC_Assignment2
-Group33 Assignment2
+# Cluster-and-Cloud-Computing-Dashboard
 
 This project requires our team to develop a front-end web application based on the cloud system
 (UniMelb Research Cloud) to tell and visualize interesting life stories in Australia and improve our
